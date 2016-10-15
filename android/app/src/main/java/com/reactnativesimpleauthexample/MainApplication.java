@@ -3,6 +3,7 @@ package com.reactnativesimpleauthexample;
 import android.app.Application;
 import android.util.Log;
 
+import com.cloudrail.si.CloudRail;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -22,8 +23,10 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
+      CloudRail.setAppKey("58021ce4f7433a0190af454d");
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
+          new MainReactPackage(),
+          new SimpleAuthPackage()
       );
     }
   };

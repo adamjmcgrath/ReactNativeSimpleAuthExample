@@ -26,6 +26,11 @@ project.pbxproj
 Podfile.lock
 Pods
 
+# Android
+.gradle
+local.properties
+*.iml
+
 # node.js
 #
 node_modules/
