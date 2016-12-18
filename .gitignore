@@ -21,10 +21,14 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-*.xcworkspace
-project.pbxproj
-Podfile.lock
-Pods
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
 
 # node.js
 #
@@ -37,3 +41,9 @@ docs
 .travis/deploy_key
 .travis/deploy_key.pem
 .travis/deploy_key.pub
+
+# BUCK
+buck-out/
+\.buckd/
+android/app/libs
+*.keystore

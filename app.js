@@ -16,7 +16,6 @@ import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  AppRegistry,
   Image,
   Navigator,
   StyleSheet,
