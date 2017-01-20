@@ -1,9 +1,8 @@
 // Example of provider configs supported by SimpleAuth.
 
 module.exports = {
-  'google-web': {
-    client_id: '',
-    client_secret: ''
+  'google': {
+    client_id: ''
   },
   facebook: {
     app_id: ''
@@ -13,8 +12,7 @@ module.exports = {
     consumer_secret: ''
   },
   instagram: {
-    client_id: '',
-    redirect_uri: ''
+    client_id: ''
   },
   tumblr: {
     consumer_key: '',
@@ -22,7 +20,6 @@ module.exports = {
   },
   'linkedin-web': {
     client_id: '',
-    client_secret: '',
-    redirect_uri: ''
+    client_secret: ''
   }
 };

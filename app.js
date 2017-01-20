@@ -1,14 +1,7 @@
 /**
  * Sample React Native App using react-native-simple-auth.
- * To run on a mac from the project home dir:
  *
- * 1. Create secrets.js from secrets.example.js template
- * 2. `npm install`
- * 3. `pod install`
- * 3. `open ./ReactNativeSimpleAuthExample.xcworkspace/`
- * 4. Then in xcode hit cmd + r
- *
- * https://github.com/facebook/react-native
+ * Create secrets.js from secrets.example.js template
  */
 'use strict';
 
@@ -23,7 +16,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import simpleAuthClient from 'react-native-simple-auth';
+import * as simpleAuthProviders from 'react-native-simple-auth';
 import secrets from './secrets';
 
 class Profile extends Component {
@@ -52,7 +45,7 @@ class Profile extends Component {
     switch (provider) {
       case 'instagram':
         return this.props.info.data.full_name;
-      case 'linkedin-web':
+      case 'linkedin':
         return `${this.props.info.firstName} ${this.props.info.lastName}`;
       default:
         return this.props.info.name
@@ -61,7 +54,7 @@ class Profile extends Component {
 
   getPictureLink(provider) {
     switch (provider) {
-      case 'google-web':
+      case 'google':
         return this.props.info.picture;
       case 'facebook':
         return `https://graph.facebook.com/${this.props.info.id}/picture?type=square`
@@ -71,8 +64,8 @@ class Profile extends Component {
         return this.props.info.data.profile_picture;
       case 'tumblr':
         return `https://api.tumblr.com/v2/blog/${this.props.info.name}.tumblr.com/avatar/96`;
-      case 'linkedin-web':
-        var profileUrl = `https://api.linkedin.com/v1/people/~:(picture-url)?oauth2_access_token=${this.props.info.token}&format=json`
+      case 'linkedin':
+        const profileUrl = `https://api.linkedin.com/v1/people/~:(picture-url)?oauth2_access_token=${this.props.info.token}&format=json`
         fetch(profileUrl)
           .then(response => response.json())
           .then(responseJson => {
@@ -93,22 +86,16 @@ class Login extends Component {
     };
   }
 
-  componentWillMount() {
-    simpleAuthClient.configure(secrets).catch(() => {
-      console.log('foo');
-    })
-  }
-
   render() {
     return (
       <View style={styles.content}>
         {
-          this.state.loading ? null : this.props.authProviders.map((provider, i) => {
+          this.state.loading ? null : Object.keys(this.props.secrets).map((provider, i) => {
             return (
               <TouchableHighlight
                 key={provider}
                 style={[styles.button, styles[provider]]}
-                onPress={this.onBtnPressed.bind(this, provider)}>
+                onPress={this.onBtnPressed.bind(this, provider, this.props.secrets[provider])}>
                 <Text style={[styles.buttonText]}>{provider.split('-')[0]}</Text>
               </TouchableHighlight>
             );
@@ -122,33 +109,32 @@ class Login extends Component {
     );
   }
 
-  onBtnPressed(provider) {
+  onBtnPressed(provider, opts) {
     const _this = this;
     this.setState({
       loading: true
     });
-    simpleAuthClient
-      .authorize(provider)
+    simpleAuthProviders[provider](opts)
     // Promise.resolve({})
       .then((info) => {
+        _this.setState({
+            loading: false
+        });
         _this.props.navigator.push({
           title: provider,
           provider,
           info,
           index: 1
         });
-        _this.setState({
-          loading: false
-        });
       })
       .catch((error) => {
+        _this.setState({
+            loading: false
+        });
         Alert.alert(
           'Authorize Error',
-          error && error.description || 'Unknown'
+          error.message
         );
-        _this.setState({
-          loading: false
-        });
       });
   }
 
@@ -161,14 +147,7 @@ export default class ReactNativeSimpleAuthExample extends Component {
         style={styles.container}
         initialRoute={{
           title: 'Simple Auth',
-          authProviders: [
-            'google-web',
-            'facebook',
-            'twitter',
-            'instagram',
-            'tumblr',
-            'linkedin-web'
-          ],
+          secrets,
           index: 0
         }}
         renderScene={(route, navigator) => {
@@ -178,7 +157,7 @@ export default class ReactNativeSimpleAuthExample extends Component {
               provider={route.provider} /> :
             <Login
               title={route.title}
-              authProviders={route.authProviders}
+              secrets={route.secrets}
               navigator={navigator} />
         }}
         navigationBar={
@@ -268,7 +247,7 @@ let styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  'google-web': {
+  google: {
     backgroundColor: '#ccc'
   },
   facebook: {
@@ -283,7 +262,7 @@ let styles = StyleSheet.create({
   tumblr: {
     backgroundColor: '#36465D'
   },
-  'linkedin-web': {
+  linkedin: {
     backgroundColor: '#0077B5'
   }
 });
