@@ -115,7 +115,6 @@ class Login extends Component {
       loading: true
     });
     simpleAuthProviders[provider](opts)
-    // Promise.resolve({})
       .then((info) => {
         _this.setState({
             loading: false
