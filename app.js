@@ -55,7 +55,7 @@ class Profile extends Component {
   getPictureLink(provider) {
     switch (provider) {
       case 'google':
-        return this.props.info.picture;
+        return this.props.info.user.picture;
       case 'facebook':
         return `https://graph.facebook.com/${this.props.info.id}/picture?type=square`
       case 'twitter':
